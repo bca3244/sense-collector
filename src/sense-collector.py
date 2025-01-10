@@ -396,7 +396,7 @@ class SenseCollector:
     async def handle_realtime_update(self, payload):
         api_logger.debug("Starting to handle realtime update")
 
-        required_keys = ["hz", "c", "w", "epoch"]
+        required_keys = ["c", "w", "epoch"]
         missing_keys = [key for key in required_keys if key not in payload]
 
         if missing_keys:
@@ -405,7 +405,6 @@ class SenseCollector:
             return  # Do not process further if any required key is missing
 
         try:
-            hertz = float(payload["hz"])
             total_current = float(payload["c"])
             total_watts = float(payload["w"])
             epoch = int(payload["epoch"])  # Use epoch time in seconds directly
@@ -416,7 +415,6 @@ class SenseCollector:
 
             await self.influxdb_storage.persist_realtime_data(
                 self.monitor_id,
-                hertz,
                 total_current,
                 total_watts,
                 epoch,
